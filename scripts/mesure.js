@@ -5,10 +5,6 @@ const path = require('path')
 const axios = require('axios')
 const algoliasearch = require("algoliasearch");
 
-
-require('dotenv').config()
-require('dotenv').config({ override: true, path:  path.join(__dirname, '../.env.localx') , debug : true})
-
 /// ------------------------ configs --------------------------------
 const baseUrlApi = process.env.API_BASE_URL
 const token = process.env.API_TOKEN
@@ -97,7 +93,7 @@ const fiche = async (prodId) => {
 
 }
 
-async function mesure() {
+ const mesure = async () => {
 
     //TODO get random context   
     let algoliaContexts = contexts.split('|')
@@ -132,7 +128,7 @@ async function mesure() {
     //let prodId = '25364' //'25997' /// '18080' // '221136'  '30698'// 
     //prds =  Array(100).fill(prodId)
 
-    fs.createWriteStream(tmpFilePath)
+    if (fs.existsSync(tmpFilePath)) fs.unlinkSync(tmpFilePath)
     fs.appendFileSync(tmpFilePath, 'time,product,duration,max,fiche,refs,avis\r\n')
 
     for (let i = 0; i < prds.length; i++) {
@@ -147,10 +143,4 @@ async function mesure() {
     })
 
 }
-try {
-    mesure()
-} catch (error) {
-    console.log(error)
-}
-
-
+module.exports = mesure; 
