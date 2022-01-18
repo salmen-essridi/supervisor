@@ -1,6 +1,7 @@
 ## Install 
+```sh
 npm install 
-
+```
 ## Config in .env
 ```sh
 API_BASE_URL=""
@@ -14,15 +15,23 @@ EXEC_PAUSE_TIME=1000
 CRON_EXPRESSION='15 * * * *'
 ```
 
-## Run mesure script 
+## Run mesure script
+```sh
 npm run mesure 
+```
 
 ## Run cron with config CRON_EXPRESSION='15 * * * *'
+```sh
+//with config CRON_EXPRESSION='15 * * * *'
 npm run cron 
-
+```
 
 ## build dashboard 
+```sh
 npm run build 
+```
 
 ## Run dashboard 
+```sh
 npm run start 
+```
