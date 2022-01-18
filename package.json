@@ -5,12 +5,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "mesure": "node scripts/mesure.js",
     "lint": "next lint"
   },
   "dependencies": {
+    "algoliasearch": "^4.12.0",
+    "axios": "^0.24.0",
+    "csvtojson": "^2.0.10",
+    "dotenv": "^14.2.0",
     "next": "12.0.8",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "recharts": "^2.1.8"
   },
   "devDependencies": {
     "eslint": "8.7.0",
