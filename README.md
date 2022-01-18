@@ -1,7 +1,8 @@
 ## Install 
 npm install 
 
-## Config in .env 
+## Config in .env
+```sh
 API_BASE_URL=""
 API_TOKEN="" 
 ALGOLIA_CONTEXTS=""
@@ -11,7 +12,7 @@ ALGOLIA_INEX=""
 EXEC_MAX_PRODUCTS=100
 EXEC_PAUSE_TIME=1000
 CRON_EXPRESSION='15 * * * *'
-
+```
 
 ## Run mesure script 
 npm run mesure 
