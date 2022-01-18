@@ -20,7 +20,7 @@ CRON_EXPRESSION='15 * * * *'
 npm run mesure 
 ```
 
-## Run cron with config CRON_EXPRESSION='15 * * * *'
+## Run cron 
 ```sh
 //with config CRON_EXPRESSION='15 * * * *'
 npm run cron 
