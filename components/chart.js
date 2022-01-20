@@ -50,7 +50,7 @@ export default function Chart() {
             return (
                 <div className="recharts-tooltip-wrapper">
                     <p className="label">{`Id produit=${payload[0].payload.product}`}</p>
-                    <p className="label">{`max=${payload[0].value}ms (api fiche: ${payload[0].payload.fiche}ms, api refs: ${payload[0].payload.refs}ms, api avis: ${payload[0].payload.avis}ms)`}</p>
+                    <p className="label">{`max=${payload[0].payload.max}ms (api fiche: ${payload[0].payload.fiche}ms, api refs: ${payload[0].payload.refs}ms, api avis: ${payload[0].payload.avis}ms)`}</p>
                 </div>
             )
         }
