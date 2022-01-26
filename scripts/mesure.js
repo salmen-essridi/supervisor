@@ -17,7 +17,10 @@ const algoliaAPIKey = process.env.ALGOLIA_APP_KEY
 
 
 const filePath = path.join(__dirname, '../public/logs/trace.csv')
+const dirArchivePath = path.join(__dirname, '../public/logs/')
+
 const tmpFilePath = filePath + '_'
+
 /// ------------------------------------------------------------------
 
 
@@ -93,12 +96,35 @@ const fiche = async (prodId) => {
 
 }
 
- const mesure = async () => {
+
+
+const  padTo2Digits = (num) => {
+    return num.toString().padStart(2, '0');
+  }
+
+const  formatDate = (date) => {
+    return (
+      [
+        date.getFullYear(),
+        padTo2Digits(date.getMonth() + 1),
+        padTo2Digits(date.getDate()),
+      ].join('-') +
+      ' ' +
+      [
+        padTo2Digits(date.getHours()),
+        padTo2Digits(date.getMinutes()),
+        padTo2Digits(date.getSeconds()),
+      ].join('-')
+    );
+  }
+
+
+const mesure = async () => {
 
     //TODO get random context   
     let algoliaContexts = contexts.split('|')
     console.log(algoliaContexts)
-    
+
     let allHits = []
 
     for (let i = 0; i < algoliaContexts.length; i++) {
@@ -113,7 +139,7 @@ const fiche = async (prodId) => {
     }
 
     let allPrds = allHits.map(h => h.fiche.id)
-   
+
     // Shuffle array
     const shuffled = allPrds.sort(() => 0.5 - Math.random());
     // Get sub-array of first n elements after shuffled
@@ -128,6 +154,10 @@ const fiche = async (prodId) => {
     //let prodId = '25364' //'25997' /// '18080' // '221136'  '30698'// 
     //prds =  Array(100).fill(prodId)
 
+
+    let startDateStr = formatDate(new Date())
+
+
     if (fs.existsSync(tmpFilePath)) fs.unlinkSync(tmpFilePath)
     fs.appendFileSync(tmpFilePath, 'time,product,duration,max,fiche,refs,avis\r\n')
 
@@ -137,10 +167,15 @@ const fiche = async (prodId) => {
         await delay(pauseInterval)
     }
 
-    fs.rename(tmpFilePath, filePath, function (err) {
-        if (err) throw err
-        console.log('Successfully renamed - AKA moved!')
-    })
+    let endDateStr = formatDate(new Date())
+
+    let fileArchivePath = dirArchivePath+ 'archive/' +  startDateStr.replace(' ' ,'-' ) +'-'+  endDateStr.split(' ')[1] + '-trace.csv'
+
+
+    fs.renameSync(tmpFilePath, filePath)
+   
+    fs.copyFileSync(filePath, fileArchivePath)
+
 
 }
 module.exports = mesure; 
