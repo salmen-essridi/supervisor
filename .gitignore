@@ -34,4 +34,4 @@ yarn-error.log*
 .vercel
 
 # csv
-*.csv
+trace.csv
