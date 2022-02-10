@@ -10,7 +10,7 @@ require('dotenv').config({ override: true, path:  path.join(__dirname, '../.env.
 const mesure = require('./mesure');
 
 try {
-    mesure()
+    mesure('')
 } catch (error) {
     console.log(error)
 }

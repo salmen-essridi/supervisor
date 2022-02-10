@@ -19,7 +19,7 @@ const algoliaAPIKey = process.env.ALGOLIA_APP_KEY
 const filePath = path.join(__dirname, '../public/logs/trace.csv')
 const dirArchivePath = path.join(__dirname, '../public/logs/')
 
-const tmpFilePath = filePath + '_'
+//const tmpFilePath = filePath + '_'
 
 /// ------------------------------------------------------------------
 
@@ -28,6 +28,9 @@ const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex(algoliaIndex);
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+const getFilePath = (instId) =>  path.join(__dirname, '../public/logs/trace.csv')
+const getTmpFilePath = (instId) => filePath + '_' + instId    
 
 axios.interceptors.request.use(function (config) {
     config.timeData = { startTime: new Date() }
@@ -45,7 +48,7 @@ axios.interceptors.response.use(function (response) {
 
 
 
-const fiche = async (prodId) => {
+const fiche = async ( prodId, instId) => {
 
     const config = {
         baseURL: baseUrlApi,
@@ -54,7 +57,7 @@ const fiche = async (prodId) => {
 
     let URL1 = `/fiches/${prodId}/info` // Is Solde et VP 
     let URL2 = `/fiches/${prodId}/references`
-    let URL3 = `/avis/$${prodId}/produit`
+    let URL3 = `/avis/${prodId}/produit`
     //let URL4 = `/rayons/11`
 
     const promise1 = axios.get(URL1, config);
@@ -85,12 +88,12 @@ const fiche = async (prodId) => {
         let color = '\x1b[36m'
         if (duration > 250) color = "\x1b[43m"
         if (duration > 450) color = "\x1b[41m"
-        console.log('%s Prod=%s Execution time: %dms, max=%dms ---> info=%dms, refs=%dms, avis=%dms \x1b[0m', color, prodId, end, duration, duration1, duration2, duration3)
+        console.log('%s Inst=%s Prod=%s Execution time: %dms, max=%dms ---> info=%dms, refs=%dms, avis=%dms \x1b[0m', color, instId, prodId, end, duration, duration1, duration2, duration3)
         // console.info('Prod=%s Size %dKb ---> info=%db, refs=%db, avis=%db', prodId, size, size1, size2,size3)
         let time = new Date().getTime()
 
-
-        fs.appendFileSync(tmpFilePath, `${time},${prodId},${end},${duration},${duration1},${duration2},${duration3}\r\n`)
+        let instTmpFilePath = getTmpFilePath(instId)
+        fs.appendFileSync(instTmpFilePath, `${time},${instId},${prodId},${end},${duration},${duration1},${duration2},${duration3}\r\n`)
 
     })
 
@@ -119,7 +122,7 @@ const  formatDate = (date) => {
   }
 
 
-const mesure = async () => {
+const mesure = async (instId) => {
 
     //TODO get random context   
     let algoliaContexts = contexts.split('|')
@@ -156,25 +159,25 @@ const mesure = async () => {
 
 
     let startDateStr = formatDate(new Date())
+    let instTmpFilePath = getTmpFilePath(instId)
 
-
-    if (fs.existsSync(tmpFilePath)) fs.unlinkSync(tmpFilePath)
-    fs.appendFileSync(tmpFilePath, 'time,product,duration,max,fiche,refs,avis\r\n')
+    if (fs.existsSync(instTmpFilePath)) fs.unlinkSync(instTmpFilePath)
+    fs.appendFileSync(instTmpFilePath, 'time,user,product,duration,max,fiche,refs,avis\r\n')
 
     for (let i = 0; i < prds.length; i++) {
         // console.log(i + ' / '+ prds.length)
-        await fiche(prds[i])
+        await fiche(prds[i], instId)
         await delay(pauseInterval)
     }
 
     let endDateStr = formatDate(new Date())
 
-    let fileArchivePath = dirArchivePath+ 'archive/' +  startDateStr.replace(' ' ,'-' ) +'-'+  endDateStr.split(' ')[1] + '-trace.csv'
+    let fileArchivePath = dirArchivePath+ 'archive/' +  startDateStr.replace(' ' ,'-' ) +'-'+  endDateStr.split(' ')[1] +'-trace'+instId+'.csv'
 
 
-    fs.renameSync(tmpFilePath, filePath)
+   // fs.renameSync(instTmpFilePath, filePath)
    
-    fs.copyFileSync(filePath, fileArchivePath)
+    fs.copyFileSync(instTmpFilePath, fileArchivePath)
 
 
 }

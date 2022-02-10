@@ -10,8 +10,11 @@ export default async (req, res) => {
 
 
 
+  let dt = new Date()
+  let targetPeriod = req.query.tp || dt.toISOString().slice(0, 10) +'-' + dt.getHours().toLocaleString('en-US', { minimumIntegerDigits: 2,useGrouping: false})
 
-  let targetPeriod = req.query.tp || ''
+
+  console.log(targetPeriod)
 
 
 
@@ -23,8 +26,13 @@ export default async (req, res) => {
 
   fileNames.sort((a, b) => - a.localeCompare(b))
 
+ 
+
   let targetFileNames = (fileNames.length) ? [fileNames[0]] : []
-  targetFileNames = (targetPeriod && fileNames.length) ? fileNames.filter(fileName => fileName.startsWith(targetPeriod) && fileName.endsWith('trace.csv')) : targetFileNames
+  targetFileNames = (targetPeriod && fileNames.length) ? fileNames.filter(fileName => fileName.startsWith(targetPeriod) &&  !fileName.endsWith('trace.csv')) : targetFileNames
+
+
+  console.log(targetFileNames)
 
   let jsonData = []
 
